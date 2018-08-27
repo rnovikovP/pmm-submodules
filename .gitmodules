@@ -1,7 +1,7 @@
 [submodule "pmm-client"]
 	path = sources/pmm-client/src/github.com/percona/pmm-client
 	url = ../../percona/pmm-client.git
-	branch = PMM-2704_add_postgresql
+	branch = master
 [submodule "qan-agent"]
 	path = sources/qan-agent/src/github.com/percona/qan-agent
 	url = ../../percona/qan-agent.git
@@ -49,7 +49,7 @@
 [submodule "pmm-server"]
 	path = sources/pmm-server
 	url = ../../percona/pmm-server
-	branch = PMM-2707
+	branch = master
 [submodule "pmm-server-packaging"]
 	path = sources/pmm-server-packaging
 	url = ../../percona/pmm-server-packaging
@@ -57,7 +57,7 @@
 [submodule "grafana-dashboards"]
 	path = sources/grafana-dashboards
 	url = ../../percona/grafana-dashboards
-	branch = PMM-2708-PostgreSQL-Overview-Dashboard 
+	branch = master
 [submodule "rds_exporter"]
 	path = sources/rds_exporter/src/github.com/percona/rds_exporter
 	url = ../../percona/rds_exporter
@@ -65,4 +65,4 @@
 [submodule "postgres_exporter"]
 	path = sources/postgres_exporter/src/github.com/percona/postgres_exporter
 	url = ../../percona/postgres_exporter.git
-	branch = PMM-2705
+	branch = master
