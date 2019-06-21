@@ -40,6 +40,11 @@
 	path = sources/percona-toolkit/src/github.com/percona/percona-toolkit
 	url = https://github.com/percona/percona-toolkit.git
 	branch = release-3.0.10
+[submodule "pmm-client"]
+	path = sources/pmm-client/src/github.com/percona/pmm-client
+	url = https://github.com/percona/pmm-client.git
+	branch = PMM-2.0
+
 
 
 # PMM Server
