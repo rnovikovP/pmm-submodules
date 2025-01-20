@@ -1,0 +1,64 @@
+name: Scan pmm server and client docker images
+
+on:
+  schedule:
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+    inputs:
+      server_image:
+        description: "pmm-server docker image"
+        required: false
+        default: perconalab/pmm-server:dev-latest
+        type: string
+      client_image:
+        description: "pmm-client docker image"
+        default: perconalab/pmm-client:dev-latest
+        required: false
+        type: string
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: ${{ inputs.server_image || 'perconalab/pmm-server:dev-latest' }}
+          - image: ${{ inputs.client_image || 'perconalab/pmm-client:dev-latest' }}
+
+    steps:
+      - name: Set report filename
+        run: |
+          echo "REPORT=$(echo ${{ matrix.image }} | cut -d'/' -f2 | tr ':' '-')" >> $GITHUB_ENV
+
+      - name: Run trivy scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ matrix.image }}
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+          output: ${{ env.REPORT }}
+
+      - name: Archive trivy scan results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.REPORT }}
+          path: ${{ env.REPORT }}
+          retention-days: 7
+
+      - name: Send Slack notification on failure
+        if: ${{ failure() }}
+        uses: percona/gh-action-action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_TOKEN }}
+          SLACK_USERNAME: "trivy scanner"
+          SLACK_ICON_EMOJI: ":squirrel:"
+          SLACK_COLOR: "#FF0000"
+          SLACK_TITLE: "CVE Scan failure"
+          SLACK_MESSAGE: "Failed CVE scan for ${{ matrix.image }}"
+          SLACK_FOOTER: "Please check the Actions URL ^"
